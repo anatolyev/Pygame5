@@ -19,6 +19,7 @@ def main():
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('Спрайты')
     screen.fill("white")
+    image = load_image('bomb.png')
     running = True
     while running:
         # внутри игрового цикла ещё один цикл
@@ -27,8 +28,8 @@ def main():
             # при закрытии окна
             if event.type == pygame.QUIT:
                 running = False
-            # РЕАКЦИЯ НА ОСТАЛЬНЫЕ СОБЫТИЯ
-            # ...
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                screen.blit(image, event.pos)
         # отрисовка и изменение свойств объектов
         # ...
         pygame.display.flip()
