@@ -3,6 +3,10 @@ import os
 import sys
 from random import randrange
 
+pygame.init()
+size = width, height = 400, 400
+screen = pygame.display.set_mode(size)
+
 
 def load_image(name, colorkey=None):
     fullname = os.path.join('images', name)
@@ -20,19 +24,26 @@ def load_image(name, colorkey=None):
     return image
 
 
+class Bomb(pygame.sprite.Sprite):
+    image = load_image("bomb.png")
+    def __init__(self, group):
+        super().__init__(group)
+        self.image = Bomb.image
+        self.rect = self.image.get_rect()
+        self.rect.x = randrange(width)
+        self.rect.y = randrange(height)
+
+    def update(self):
+        self.rect = self.rect.move(randrange(3) - 1, randrange(3) - 1)
+
+
 def main():
-    pygame.init()
-    size = width, height = 400, 400
-    screen = pygame.display.set_mode(size)
+    clock = pygame.time.Clock()
     pygame.display.set_caption('Спрайты')
     all_sprites = pygame.sprite.Group()
     image = load_image("bomb.png")
     for _ in range(50):
-        bomb = pygame.sprite.Sprite(all_sprites)
-        bomb.image = image
-        bomb.rect = bomb.image.get_rect()
-        bomb.rect.x = randrange(width)
-        bomb.rect.y = randrange(height)
+        Bomb(all_sprites)
     running = True
     while running:
         # внутри игрового цикла ещё один цикл
@@ -47,6 +58,8 @@ def main():
         # отрисовка и изменение свойств объектов
         screen.fill("white")
         all_sprites.draw(screen)
+        all_sprites.update()
+        clock.tick(30)
         pygame.display.flip()
     pygame.quit()
 
